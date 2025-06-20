@@ -1,6 +1,6 @@
 
 export type Limbs = 'R' | 'L' | 'RL';
-export type LimbsType = 'handPattern' | 'footPattern' ;
+export type LimbsType = 'handPattern' | 'feetPattern' ;
 
 export interface SerializedPattern {
     id: string;
@@ -10,3 +10,7 @@ export interface SerializedPattern {
     pattern: Limbs[];
     tempo: number;
 }
+
+export type PatternOption = { id: string; text: string };
+
+
