@@ -1,14 +1,24 @@
-import {LimbsType, SerializedPattern} from "@/modals/types";
+import {SerializedPattern} from "@/modals/types";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {StickingPattern} from "@/modals/StickingPattern";
+import {defaultPatterns} from "@/data/stickingPatterns";
 
 
 export class Services {
 
-    async getPatterns(type: LimbsType): Promise<StickingPattern[]>{
-        console.log("getPatterns()");
+    async initDefaultsIfNeeded() {
+        const existing = await this.getPatterns();
+        if (!existing || existing.length === 0) {
+            await AsyncStorage.setItem("stickingPatterns", JSON.stringify(defaultPatterns)
+            );
+        }
+    }
+
+
+    async getPatterns(): Promise<StickingPattern[]>{
+            console.log("getPatterns()");
         try{
-            const storedPatterns = await AsyncStorage.getItem(type);
+            const storedPatterns = await AsyncStorage.getItem("stickingPatterns");
 
             return storedPatterns ?
                 (JSON.parse(storedPatterns) as SerializedPattern[]).map(pattern => this.parsePattern(pattern))
@@ -21,14 +31,14 @@ export class Services {
 
     async addPattern (addedPattern:StickingPattern):Promise<void>{
         console.log("addPattern() - adding: ",addedPattern.name );
-        await this.modifyPatterns(addedPattern.LimbType,(patterns:StickingPattern[]) =>
+        await this.modifyPatterns((patterns:StickingPattern[]) =>
             [...patterns,{...addedPattern, id: this.getNextId(patterns)},]
         );
     }
 
     async updatePattern (updatedPattern:StickingPattern):Promise<void> {
         console.log("updatePattern() - updating: ",updatedPattern.name );
-        await this.modifyPatterns(updatedPattern.LimbType,(patterns:StickingPattern[])=> {
+        await this.modifyPatterns((patterns:StickingPattern[])=> {
             const index = patterns.findIndex((p) => p.id === updatedPattern.id);
             if (index !== -1) {
                 const newPatterns = [...patterns];
@@ -41,7 +51,7 @@ export class Services {
 
     async deletePattern (deletedPattern:StickingPattern):Promise<void>{
         console.log("deletePattern() - deleting: ",deletedPattern.name );
-        await this.modifyPatterns(deletedPattern.LimbType,(patterns:StickingPattern[]) =>
+        await this.modifyPatterns((patterns:StickingPattern[]) =>
             patterns.filter((p) => p.id !== deletedPattern.id)
         );
     }
@@ -50,16 +60,14 @@ export class Services {
 
 
 
-    private async modifyPatterns(limbType: LimbsType, modifier: (patterns: StickingPattern[]) => StickingPattern[]): Promise<void> {
+    private async modifyPatterns(modifier: (patterns: StickingPattern[]) => StickingPattern[]): Promise<void> {
         try {
-            const patterns = await this.getPatterns(limbType);
+            const patterns = await this.getPatterns();
             const updated = modifier(patterns);
-            await AsyncStorage.setItem(
-                limbType,
-                JSON.stringify(updated.map(this.serializedPattern))
+            await AsyncStorage.setItem( "stickingPatterns",JSON.stringify(updated.map(this.serializedPattern))
             );
         } catch (error) {
-            console.error(`Error modifying ${limbType} patterns:`, error);
+            console.error(`Error modifying patterns:`, error);
             throw error;
         }
     }
@@ -76,7 +84,6 @@ export class Services {
         return  new StickingPattern(
             serialized.id,
             serialized.name,
-            serialized.LimbType,
             serialized.description,
             serialized.pattern,
             serialized.tempo
@@ -87,7 +94,6 @@ export class Services {
         return {
             id: pattern.id,
             name: pattern.name,
-            LimbType: pattern.LimbType,
             description: pattern.description,
             pattern: pattern.pattern,
             tempo: pattern.tempo
