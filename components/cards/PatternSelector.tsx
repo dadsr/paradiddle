@@ -1,5 +1,5 @@
 import {JSX, useEffect, useState} from "react";
-import {Card, Divider} from "react-native-paper";
+import {ActivityIndicator, Card, Divider} from "react-native-paper";
 import { Text } from 'react-native-paper';
 import { PaperSelect } from 'react-native-paper-select';
 
@@ -8,10 +8,13 @@ import {StickingPattern} from "@/modals/StickingPattern";
 import {ListItem} from "react-native-paper-select/lib/typescript/interface/paperSelect.interface";
 
 
+type PatternSelectorProps = {
+    onSelectPattern: (pattern: StickingPattern | null) => void;
+};
 
-export default function PatternSelector():JSX.Element {
+export default function PatternSelector({onSelectPattern}: PatternSelectorProps):JSX.Element {
     console.log("PatternSelector()");
-
+    const [loading, setLoading] = useState(true);
     const [stickingPatterns, setStickingPatterns] = useState<StickingPattern[]>([]);
     const [patternsSelect, setPatternsSelect] = useState<{
         list: ListItem[];
@@ -44,8 +47,13 @@ export default function PatternSelector():JSX.Element {
                     ...prev,
                     error: 'Failed to load patterns',
                 }));
-            });
+            })
+            .finally(() =>
+                setLoading(false)
+            );
     }, []);
+
+    if (loading) return <ActivityIndicator animating={true} />;
 
     return (
         <Card>
@@ -62,6 +70,8 @@ export default function PatternSelector():JSX.Element {
                             selectedList: value.selectedList,
                             error: '',
                         }));
+                        const selectedPattern = stickingPatterns.find(p => p.name === value.text);
+                        onSelectPattern(selectedPattern || null);
                     }}
                     arrayList={patternsSelect.list}
                     selectedArrayList={patternsSelect.selectedList}
@@ -70,6 +80,9 @@ export default function PatternSelector():JSX.Element {
                     hideSearchBox={true}
                     textInputMode="outlined"
                 />
+                {patternsSelect.error ? (
+                    <Text style={{ color: 'red' }}>{patternsSelect.error}</Text>
+                ) : null}
                 <Divider />
             </Card.Content>
         </Card>

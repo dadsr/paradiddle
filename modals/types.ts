@@ -11,4 +11,8 @@ export interface SerializedPattern {
 
 export type PatternOption = { id: string; text: string };
 
-
+export type stickingProps ={
+    pattern: string[];
+    beat: number;
+    isPlaying: "play" | "pause";
+}
