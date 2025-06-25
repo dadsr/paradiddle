@@ -1,8 +1,8 @@
 import { JSX } from "react";
 import {Animated} from "react-native";
 import View = Animated.View;
-import PatternSelector from "@/components/cards/PatternSelector";
-import Metronome from "@/components/cards/Metronome";
+import PatternSelector from "@/components/PatternSelector";
+import MetronomeControl from "@/components/MetronomeControl";
 import Options from "@/components/cards/Options";
 
 
@@ -18,7 +18,7 @@ export default function SetUp():JSX.Element {
                 <PatternSelector />
             </View>
             <View>
-                <Metronome />
+                <MetronomeControl />
             </View>
         </>
     )

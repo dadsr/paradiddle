@@ -10,8 +10,8 @@ type TempoProps = {
     onTempoChange: (tempo: number) => void;
 }
 
-export default function Metronome({tempo, isPlaying, onTempoChange, setIsPlaying}: TempoProps):JSX.Element{
-    console.log("Metronome()");
+export default function MetronomeControl({tempo, isPlaying, onTempoChange, setIsPlaying}: TempoProps):JSX.Element{
+    console.log("MetronomeControl()");
 
     const handlePress = () => {
         setIsPlaying(isPlaying === "play" ? "pause" : "play");
@@ -19,7 +19,7 @@ export default function Metronome({tempo, isPlaying, onTempoChange, setIsPlaying
 
     return (
         <Card>
-            <Card.Title title="Metronome" subtitle={`${tempo} BPM`}/>
+            <Card.Title title="MetronomeControl" subtitle={`${tempo} BPM`}/>
             <Card.Content>
                 <Slider
                     style={{ width: '100%', height: 40 }}

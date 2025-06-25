@@ -1,4 +1,4 @@
-import React from "react";
+import React, { JSX } from "react";
 import { StyleSheet } from "react-native";
 import { Card, Surface, Text } from "react-native-paper";
 import { limbVisualizerProps } from "@/modals/types";
@@ -10,14 +10,13 @@ export default function StickingVisualizer({
                                            }: limbVisualizerProps): JSX.Element {
 
     const isActive = (limb: string) =>
-        isPlaying && (currentLimb === limb || currentLimb === "RL" || currentLimb === "RLK");
+        isPlaying && (currentLimb === limb || currentLimb === "RL");
 
     return (
         <Card style={styles.container}>
             <Card.Title title="Visual" />
             <Card.Content>
 
-                {/* Right Hand */}
                 <Card style={isActive("R") ? styles.activeCard : styles.inactiveCard}>
                     <Card.Title title="Right Hand" />
                     <Card.Content>
