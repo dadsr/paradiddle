@@ -8,6 +8,7 @@ type TempoProps = {
     isPlaying: "play" | "pause";
     setIsPlaying: (isPlaying: "play" | "pause") => void;
     onTempoChange: (tempo: number) => void;
+    reset: () => void;
 }
 
 export default function MetronomeControl({tempo, isPlaying, onTempoChange, setIsPlaying}: TempoProps):JSX.Element{

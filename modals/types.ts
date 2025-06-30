@@ -18,7 +18,7 @@ export type stickingProps ={
 }
 
 export type limbVisualizerProps ={
-    currentLimb: Limb;
     isPlaying: "play" | "pause";
     isKicks: boolean;
+    currentLimb: Limb;
 }

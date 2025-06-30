@@ -21,30 +21,30 @@ export default function Practice({pattern, isKicks}: PracticeProps):JSX.Element 
     const { playRightHandClick, playLeftHandClick, playBothHandsClick, playRightKick, playLeftKick } = useAudio();
 
     const metronome =useMetronome({
-        tempo: currentTempo,
+        initialTempo: currentTempo,
         patternLength: pattern.pattern.length,
         onBeat: (beat:number) => {
             const currentLimb:Limb = pattern.pattern[beat];
             switch (currentLimb) {
                 case "R":
-                    playRightHandClick("R");
+                    playRightHandClick();
                     break;
                 case "L":
-                    playLeftHandClick("L");
+                    playLeftHandClick();
                     break;
                 case "RK":
-                    playRightKick("RK");
+                    playRightKick();
                     break;
                 case "LK":
-                    playLeftKick("LK");
+                    playLeftKick();
                     break;
                 default:
-                    playBothHandsClick("RL");
+                    playBothHandsClick();
                     break;
             }
-        }
+        },
 
-    })
+    });
 
 
     useEffect(() => {
@@ -57,11 +57,11 @@ export default function Practice({pattern, isKicks}: PracticeProps):JSX.Element 
     return (
         <>
             <MetronomeControl
-                isPlaying={metronome.isPlaying}
-                onPlayPause={metronome.playPause}
                 tempo={metronome.tempo}
+                isPlaying={metronome.isPlaying}
+                setIsPlaying={metronome.setIsPlaying()}
                 onTempoChange={metronome.changeTempo}
-                onReset={metronome.reset}
+                reset={metronome.reset}
             />
             <Divider />
             <StickingNotation
